@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
@@ -13,6 +12,7 @@
       </ul>
       <button class="btn btn-link pull-right" ng-click="launchCastApp()" ng-show="castStatus.devicesAvailable"><img class="img-thumbanail" ng-show="castStatus.deviceState == '0'" src="/app/img/ic_cast_black_24dp.png" title="Chromecast devices available, add them to piSignage"/><img class="img-thumbanail" ng-show="castStatus.deviceState != '0'" src="/app/img/ic_cast_connected_black_24dp.png" title="Chromecast device connected"/></button>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="/logout">Logout</a></li>
         <li><a href="https://twitter.com/pisignage" target="_blank"><small class="text-info">follow us on&nbsp;<i class="fa fa-twitter-square text-info"></i>&nbsp;for latest updates and tips</small><br/><small class="text-muted">version hash: {{serverConfig.version}}, {{serverConfig.date}}</small></a></li>
       </ul>
     </div>

@@ -191,8 +191,8 @@ angular.module('piServerApp', [
             return text.toLowerCase();
         }
 
-
-        $httpProvider.interceptors.push(function ($q, $rootScope) {
+        // Inject $window service for redirection
+        $httpProvider.interceptors.push(function ($q, $rootScope, $window) {
 
             var onlineStatus = false;
 
@@ -206,9 +206,19 @@ angular.module('piServerApp', [
                 },
 
                 'responseError': function (response) {
-                    if (onlineStatus) {
-                        onlineStatus = false;
-                        $rootScope.$broadcast('onlineStatusChange', onlineStatus);
+                    // Check if the error is 401 Unauthorized
+                    if (response.status === 401) {
+                        console.log("Received 401 Unauthorized, redirecting to login.");
+                        // Perform a full page redirect to the server-side login route
+                        $window.location.href = '/login';
+                        // Optionally, you could broadcast an event here and handle it in controllers
+                        // $rootScope.$broadcast('auth-loginRequired');
+                        // return $q.reject(response); // Reject the promise if you want controllers to also know
+                    } else {
+                       if (onlineStatus) {
+                            onlineStatus = false;
+                            $rootScope.$broadcast('onlineStatusChange', onlineStatus);
+                        }
                     }
                     return $q.reject(response);
                 }

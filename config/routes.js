@@ -13,18 +13,28 @@ var assets = require('../app/controllers/assets'),
     groups = require('../app/controllers/groups'),
     labels = require('../app/controllers/labels'),
     rssFeed = require('../app/controllers/rss-feed'),
-    licenses  = require('../app/controllers/licenses');
+    licenses  = require('../app/controllers/licenses'),
+    auth      = require('../app/controllers/auth');
     //gcalAuthorize = require('../app/controllers/gcal-authorize');
 
 /**
  * Application routes
  */
 
-//Server Routes
-// if(config.gCalendar.CLIENT_ID && config.gCalendar.CLIENT_SECRET){
-//     router.get('/auth/gcal/callback', gcalAuthorize.gCalCallback)     // from Google
-//     router.post('/api/gcal/authorize', gcalAuthorize.gCalAuthorize)   //from client
-//}
+// Authentication Routes (Public)
+router.get('/login', auth.renderLoginPage);
+router.post('/login', auth.login);
+router.get('/logout', auth.logout);
+
+// Define a middleware stack for protected routes
+const requireAuth = [auth.isAuthenticated]; // Array allows adding more middleware later if needed
+
+// Server API Routes (Protected)
+// Apply the requireAuth middleware to all /api/* routes
+router.use('/api', requireAuth);
+
+// Example applying middleware individually (alternative, but router.use('/api', ...) is cleaner)
+// router.get('/api/files', requireAuth, assets.index);
 
 router.get('/api/files', assets.index);
 router.get('/api/files/:file', assets.getFileDetails);
